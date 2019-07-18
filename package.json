@@ -1,0 +1,15 @@
+{
+  "name": "inline-sticker-bot",
+  "version": "0.0.1",
+  "description": "Manages stickers",
+  "main": "index.js",
+  "author": "Kelvin Santos",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "convict": "^4.4.1",
+    "dotenv": "^7.0.0",
+    "telegraf": "^3.27.1"
+  }
+}
