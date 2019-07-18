@@ -7,7 +7,22 @@ const config = convict({
         env: 'TG_TOKEN',
         format: '*',
         default: '',
-    }
+    },
+    mongoHost: {
+        env: 'MONGO_HOST',
+        format: '*',
+        default: '',
+    },
+    mongoUser: {
+        env: 'MONGO_USER',
+        format: '*',
+        default: '',
+    },
+    mongoPass: {
+        env: 'MONGO_PASS',
+        format: '*',
+        default: '',
+    },
 })
 
 module.exports = config

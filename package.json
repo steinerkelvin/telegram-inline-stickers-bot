@@ -10,6 +10,7 @@
   "dependencies": {
     "convict": "^4.4.1",
     "dotenv": "^7.0.0",
+    "mongodb": "^3.3.0-beta2",
     "telegraf": "^3.27.1"
   }
 }

@@ -1,8 +1,9 @@
-const config = require('./config')
+const MongoClient = require('mongodb').MongoClient
 const Telegraf = require('telegraf')
 const tgSession = require('telegraf/session')
 const Stage = require('telegraf/stage')
 
+const config = require('./config')
 const actionAddSticker = require('./actions/addSticker')
 
 const inlineModeGetSessionKey = 
@@ -22,19 +23,20 @@ const stickerResult = (id, fileId) => ({
 })
 
 class Bot {
-    constructor(tgToken) {
+    constructor(tgToken, db) {
         this.bot = new Telegraf(tgToken)
+        this.db = db
 
         this.bot.use(tgSession({getSessionKey: inlineModeGetSessionKey}))
 
         this.stage = new Stage()
+        this.bot.use(this.stage.middleware())
 
         this.addHandlers()
     }
 
     addHandlers() {
         this.stage.register(...actionAddSticker)
-        this.bot.use(this.stage.middleware())
 
         this.bot.start((ctx) => ctx.reply('Welcome'))
 
@@ -48,12 +50,11 @@ class Bot {
 
         this.bot.on('inline_query', (ctx) => {
             const results = []
-            for (let stickerName in ctx.session.stickers) {
-                let sticker = ctx.session.stickers[stickerName]
+            for (const stickerName in ctx.session.stickers) {
+                const sticker = ctx.session.stickers[stickerName]
                 results.push(stickerResult(sticker.file_id, sticker.file_id))
             }
 
-            // Using shortcut
             ctx.answerInlineQuery(results)
         })
     }
@@ -70,8 +71,26 @@ class Bot {
 
 function main() {
     const tgToken = config.get('tgToken')
-    const bot = new Bot(tgToken)
-    bot.start()
+
+    const mongoHost = config.get('mongoHost')
+    const mongoUser = config.get('mongoUser') 
+    const mongoPass = config.get('mongoPass') 
+
+    const uri = `mongodb+srv://${mongoUser}:${mongoPass}@${mongoHost}` // /test?retryWrites=true&w=majority
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+
+    client.connect((err) => {
+        if (err) {
+            console.log(err)
+            return
+        }
+        const db = client.db("adesivobot")
+
+        const bot = new Bot(tgToken, db)
+        bot.start()
+
+        client.close();
+    })    
 }
 
 main()

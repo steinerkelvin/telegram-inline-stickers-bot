@@ -38,7 +38,6 @@ sc.askingAlias.on('text', (ctx) => {
     const sticker = ctx.scene.state.sticker
     const alias = ctx.message.text.trim()
     ctx.reply(`Adding sticker with alias ${alias}`)
-        // .then(() => ctx.replyWithSticker(sticker.file_id))
     ctx.session.stickers = ctx.session.stickers || {}
     ctx.session.stickers[alias] = sticker
     ctx.scene.leave()
