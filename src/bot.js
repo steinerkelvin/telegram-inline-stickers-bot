@@ -4,7 +4,8 @@ const tgSession = require('telegraf/session')
 const Stage = require('telegraf/stage')
 
 const config = require('./config')
-const actionAddSticker = require('./actions/addSticker')
+const { dbGetStickers } = require('./db')
+const addStickerScenes = require('./scenes/addSticker')
 
 const inlineModeGetSessionKey = 
     (ctx) => {
@@ -22,47 +23,58 @@ const stickerResult = (id, fileId) => ({
     sticker_file_id: fileId,
 })
 
+const scenes = [...addStickerScenes]
+
 class Bot {
     constructor(tgToken, db) {
         this.bot = new Telegraf(tgToken)
         this.db = db
 
+        this.bot.use((ctx, next) => {
+            ctx.db = this.db
+            next()
+        })
+
         this.bot.use(tgSession({getSessionKey: inlineModeGetSessionKey}))
 
-        this.stage = new Stage()
+        this.stage = new Stage(scenes)
         this.bot.use(this.stage.middleware())
 
         this.addHandlers()
     }
 
     addHandlers() {
-        this.stage.register(...actionAddSticker)
+        const bot = this.bot
 
-        this.bot.start((ctx) => ctx.reply('Welcome'))
+        bot.start((ctx) => ctx.reply('Welcome. Add a sticker with /addsticker'))
 
-        this.bot.command('/addSticker', (ctx) => ctx.scene.enter('addSticker'))
-
-        this.bot.command('/list', (ctx) => {
-            ctx.session.stickers = ctx.session.stickers || {}
-            let stickerNames = Object.keys(ctx.session.stickers)
-            ctx.reply(`${stickerNames}`)
+        bot.command('/addsticker', (ctx) => ctx.scene.enter('addSticker'))
+    
+        // TODO
+        // bot.command('/list', (ctx) => {
+        // })
+    
+        bot.on('message', (ctx) => {
+            ctx.reply("Add a sticker with /addsticker")
         })
-
-        this.bot.on('inline_query', (ctx) => {
-            const results = []
-            for (const stickerName in ctx.session.stickers) {
-                const sticker = ctx.session.stickers[stickerName]
-                results.push(stickerResult(sticker.file_id, sticker.file_id))
+    
+        bot.on('inline_query', async (ctx) => {
+            const stickersIds = await dbGetStickers(this.db, ctx.from)
+            if (stickersIds) {
+                const queryResults = stickersIds.map((id) => stickerResult(id, id))
+                queryResults.slice(0, 50)
+                ctx.answerInlineQuery(queryResults, {
+                    is_personal: true
+                })
             }
-
-            ctx.answerInlineQuery(results)
         })
     }
 
     start() {
+        console.log("Starting bot")
         this.bot.telegram.getMe().then((me) => {
             const username = me.username
-            console.log(`username: ${username}`)
+            console.log(`bot username: @${username}`)
             this.bot.username = username
         })
         this.bot.launch()
@@ -88,9 +100,9 @@ function main() {
 
         const bot = new Bot(tgToken, db)
         bot.start()
-
-        client.close();
-    })    
+    })
 }
+
+// TODO app stop
 
 main()

@@ -1,6 +1,10 @@
+// TODO add /cancel command
+
 const Scene = require('telegraf/scenes/base')
+const {dbAddSticker} = require('../db')
 
 const redirectScene = (sceneName) => (ctx) => ctx.scene.enter(sceneName)
+
 
 const sc = {
     entry: new Scene('addSticker'),
@@ -18,7 +22,6 @@ sc.askingSticker.enter((ctx) => {
 })
 
 sc.askingSticker.on('sticker', (ctx) => {
-    console.log(ctx.message.sticker)
     const sticker = ctx.message.sticker
     ctx.scene.enter('addSticker_askingAlias', {sticker})
 })
@@ -31,15 +34,21 @@ sc.askingSticker.on('message', (ctx) => {
 // askingAlias
 
 sc.askingAlias.enter((ctx) => {
-    ctx.reply("Send sticker alias")
+    ctx.reply("Send sticker alias (any text)")
 })
 
 sc.askingAlias.on('text', (ctx) => {
-    const sticker = ctx.scene.state.sticker
     const alias = ctx.message.text.trim()
-    ctx.reply(`Adding sticker with alias ${alias}`)
+    ctx.reply(`Adding sticker with alias '${alias}'`)
+
+    const sticker = ctx.scene.state.sticker
+    sticker.alias = alias
+
     ctx.session.stickers = ctx.session.stickers || {}
     ctx.session.stickers[alias] = sticker
+
+    dbAddSticker(ctx.db, ctx.from, sticker.file_id)
+
     ctx.scene.leave()
 })
 
