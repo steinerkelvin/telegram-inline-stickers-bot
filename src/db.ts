@@ -1,7 +1,12 @@
+// import { Db } from "mongodb"
+
+type Db = import('mongodb').Db
+type User = import('telegram-typings').User
+// type Sticker = import('telegram-typings').Sticker
 
 // TODO store alias
 
-async function dbAddSticker(db, user, stickerId) {
+export async function dbAddSticker(db: Db, user: User, stickerId: string) {
     const col = db.collection('users')
 
     return await col.updateOne(
@@ -15,7 +20,7 @@ async function dbAddSticker(db, user, stickerId) {
     )
 }
 
-async function dbGetStickers(db, user) {
+export async function dbGetStickers(db: Db, user: User) {
     const col = db.collection('users')
 
     const userDoc = await col.findOne({
@@ -24,6 +29,3 @@ async function dbGetStickers(db, user) {
 
     return userDoc && userDoc.stickers
 }
-
-
-module.exports = { dbAddSticker, dbGetStickers }

@@ -1,10 +1,10 @@
 // TODO add /cancel command
 
-const Scene = require('telegraf/scenes/base')
-const {dbAddSticker} = require('../db')
+import Scene from 'telegraf/scenes/base'
+import { dbAddSticker } from '../db'
+import { Ctx } from '../common'
 
-const redirectScene = (sceneName) => (ctx) => ctx.scene.enter(sceneName)
-
+const redirectScene = (sceneName: string) => (ctx: Ctx) => ctx.scene.enter(sceneName)
 
 const sc = {
     entry: new Scene('addSticker'),
@@ -17,27 +17,27 @@ sc.entry.enter(redirectScene('addSticker_askingStiker'))
 
 // askingSticker
 
-sc.askingSticker.enter((ctx) => {
+sc.askingSticker.enter((ctx: any) => {
     ctx.reply("Send sticker")
 })
 
-sc.askingSticker.on('sticker', (ctx) => {
+sc.askingSticker.on('sticker', (ctx: any) => {
     const sticker = ctx.message.sticker
     ctx.scene.enter('addSticker_askingAlias', {sticker})
 })
 
-sc.askingSticker.on('message', (ctx) => {
+sc.askingSticker.on('message', (ctx: any) => {
     ctx.reply('Not a sticker. Send a sticker plz')
 })
 
 
 // askingAlias
 
-sc.askingAlias.enter((ctx) => {
+sc.askingAlias.enter((ctx: any) => {
     ctx.reply("Send sticker alias (any text)")
 })
 
-sc.askingAlias.on('text', (ctx) => {
+sc.askingAlias.on('text', (ctx: any) => {
     const alias = ctx.message.text.trim()
     ctx.reply(`Adding sticker with alias '${alias}'`)
 
@@ -53,4 +53,5 @@ sc.askingAlias.on('text', (ctx) => {
 })
 
 
-module.exports = Object.values(sc)
+const scenes = Object.values(sc)
+export default scenes

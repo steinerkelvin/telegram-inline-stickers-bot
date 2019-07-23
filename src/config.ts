@@ -1,5 +1,7 @@
-require('dotenv').config()
-const convict = require('convict')
+import dotenv from "dotenv"
+import convict from "convict"
+
+dotenv.config()
 
 const config = convict({
     tgToken: {
@@ -25,4 +27,4 @@ const config = convict({
     },
 })
 
-module.exports = config
+export default config
