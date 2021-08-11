@@ -1,7 +1,7 @@
 {
-  "name": "inline-sticker-bot",
-  "version": "0.0.2",
-  "description": "Manages stickers",
+  "name": "telegram-inline-stickers-bot",
+  "version": "0.0.3",
+  "description": "Save and search stickers by keywords.",
   "main": "index.js",
   "author": "Kelvin Santos",
   "license": "UNLICENSED",
