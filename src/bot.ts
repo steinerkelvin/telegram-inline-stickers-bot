@@ -10,7 +10,7 @@ import { dbGetStickers } from './db'
 import addStickerScenes from './scenes/addSticker'
 import { Ctx } from './common'
 
-const inlineModeGetSessionKey = 
+const inlineModeGetSessionKey =
     (ctx: Ctx) => {
         if (ctx.from && ctx.chat) {
             return `${ctx.from.id}:${ctx.chat.id}`
@@ -22,7 +22,7 @@ const inlineModeGetSessionKey =
 
 const stickerResult = (id: string, fileId: string) => ({
     type: 'sticker',
-    id:	id,
+    id: id,
     sticker_file_id: fileId,
 })
 
@@ -42,7 +42,7 @@ class Bot {
             if (next) next()
         })
 
-        this.bot.use(tgSession({getSessionKey: inlineModeGetSessionKey}))
+        this.bot.use(tgSession({ getSessionKey: inlineModeGetSessionKey }))
 
         this.stage = new Stage(scenes)
         this.bot.use(this.stage.middleware())
@@ -56,15 +56,15 @@ class Bot {
         bot.start((ctx) => ctx.reply('Welcome. Add a sticker with /addsticker'))
 
         bot.command('/addsticker', (ctx) => ctx.scene.enter('addSticker'))
-    
+
         // TODO
         // bot.command('/list', (ctx) => {
         // })
-    
+
         bot.on('message', (ctx) => {
             ctx.reply("Add a sticker with /addsticker")
         })
-    
+
         bot.on('inline_query', async (ctx) => {
             if (!ctx.from) return
 
@@ -91,23 +91,27 @@ class Bot {
 }
 
 function main() {
-    const tgToken = config.get('tgToken')
+    const tg_token = config.get('telegram_token')
+    const mongo_uri = config.get('mongo_uri')
+    const mongo_user = config.get('mongo_user')
+    const mongo_pass = config.get('mongo_pass')
+    const db_name = config.get('db_name')
 
-    const mongoHost = config.get('mongoHost')
-    const mongoUser = config.get('mongoUser') 
-    const mongoPass = config.get('mongoPass') 
-
-    const uri = `mongodb+srv://${mongoUser}:${mongoPass}@${mongoHost}` // /test?retryWrites=true&w=majority
-    const client = new MongoClient(uri, { useNewUrlParser: true });
+    const client = new MongoClient(mongo_uri, {
+        auth: {
+            username: mongo_user,
+            password: mongo_pass,
+        }
+    });
 
     client.connect((err) => {
         if (err) {
             console.log(err)
             return
         }
-        const db = client.db("adesivobot")
+        const db = client.db(db_name)
 
-        const bot = new Bot(tgToken, db)
+        const bot = new Bot(tg_token, db)
         bot.start()
     })
 }

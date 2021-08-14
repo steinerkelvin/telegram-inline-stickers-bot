@@ -4,27 +4,32 @@ import convict from "convict"
 dotenv.config()
 
 const config = convict({
-    tgToken: {
+    telegram_token: {
         doc: 'Telegram Bot Token',
-        env: 'TG_TOKEN',
+        env: 'TELEGRAM_TOKEN',
         format: '*',
         default: '',
     },
-    mongoHost: {
-        env: 'MONGO_HOST',
+    mongo_uri: {
+        env: 'MONGO_URI',
         format: '*',
         default: '',
     },
-    mongoUser: {
+    mongo_user: {
         env: 'MONGO_USER',
         format: '*',
         default: '',
     },
-    mongoPass: {
+    mongo_pass: {
         env: 'MONGO_PASS',
         format: '*',
         default: '',
     },
+    db_name: {
+        env: 'DB_NAME',
+        format: '*',
+        default: 'stickersbot',
+    }
 })
 
 export default config
