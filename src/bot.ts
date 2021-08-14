@@ -9,7 +9,7 @@ import scenes from './scenes'
 import * as store from './store'
 
 const inlineModeGetSessionKey =
-    async (ctx: MyCtx) => {
+    (ctx: MyCtx) => {
         if (ctx.from && ctx.chat) {
             return `${ctx.from.id}:${ctx.chat.id}`
         } else if (ctx.from && ctx.inlineQuery) {
@@ -18,10 +18,10 @@ const inlineModeGetSessionKey =
         return null
     }
 
-const stickerResult = (id: string, fileId: string) => ({
-    type: 'sticker',
+const stickerResult = (id: string, file_id: string) => ({
+    type: 'sticker' as 'sticker',
     id: id.slice(0, 64),
-    sticker_file_id: fileId,
+    sticker_file_id: file_id,
 })
 
 class Bot {
@@ -44,7 +44,7 @@ class Bot {
 
         let local_session = new LocalSession({
             // storage: LocalSession.storageMemory,
-            getSessionKey: inlineModeGetSessionKey,
+            // getSessionKey: inlineModeGetSessionKey,
         })
         this.bot.use(local_session.middleware())
 
@@ -61,6 +61,7 @@ class Bot {
 
         bot.on('sticker', (ctx) => {
             ctx.scene.session.sticker = ctx.message.sticker
+            ctx.scene.session.tags = []
             ctx.scene.enter("ask_sticker_tags")
         })
 
@@ -69,15 +70,16 @@ class Bot {
         })
 
         bot.on('inline_query', async (ctx) => {
-            console.log(`Received inline query.`)
-            if (!ctx.from) return
-
-            let user = ctx.from
-            const stickersIds = await store.get_stickers(this.db)(user)
-            if (stickersIds) {
-                const queryResults = stickersIds.map((id: string) => stickerResult(id, id))
-                queryResults.slice(0, 50)
-                ctx.answerInlineQuery(queryResults, {
+            const user = ctx.from
+            const query = ctx.inlineQuery.query.trim()
+            const stickers = await store.get_stickers(this.db)(user.id, query)
+            if (!stickers) {
+                ctx.answerInlineQuery([])
+            } else {
+                const query_results = stickers
+                    .map(({sticker_id: id}) => stickerResult(id, id))
+                    .slice(0, 50)
+                ctx.answerInlineQuery(query_results, {
                     is_personal: true,
                     cache_time: 30,
                 })

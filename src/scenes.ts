@@ -31,6 +31,7 @@ sc.ask_sticker_tags.command('/done', (ctx) => {
 sc.ask_sticker_tags.on('text', async (ctx) => {
     const sc_session = ctx.scene.session
 
+    const user = ctx.from
     const tag = ctx.message.text.trim()
 
     const sticker = sc_session.sticker
@@ -45,7 +46,7 @@ sc.ask_sticker_tags.on('text', async (ctx) => {
     sc_session.tags ??= []
     sc_session.tags.push(tag)
 
-    store.add_sticker_tag(ctx.db)(ctx.from, sticker.file_id)
+    store.add_sticker_tag(ctx.db)(user.id, tag, sticker.file_id)
 
     await ctx.reply(`Send more tags or finish with /done.`)
 })
