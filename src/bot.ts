@@ -1,7 +1,6 @@
 import { MongoClient, Db } from "mongodb"
 
-import * as telegraf from 'telegraf'
-import Telegraf, { ContextMessageUpdate } from 'telegraf'
+import Telegraf from 'telegraf'
 import tgSession from 'telegraf/session'
 import Stage from 'telegraf/stage'
 
@@ -22,7 +21,7 @@ const inlineModeGetSessionKey =
 
 const stickerResult = (id: string, fileId: string) => ({
     type: 'sticker',
-    id: id,
+    id: id.slice(0, 64),
     sticker_file_id: fileId,
 })
 
@@ -66,6 +65,7 @@ class Bot {
         })
 
         bot.on('inline_query', async (ctx) => {
+            console.log(`Received inline query.`)
             if (!ctx.from) return
 
             const stickersIds = await dbGetStickers(this.db, ctx.from)
@@ -73,7 +73,8 @@ class Bot {
                 const queryResults = stickersIds.map((id: string) => stickerResult(id, id))
                 queryResults.slice(0, 50)
                 ctx.answerInlineQuery(queryResults, {
-                    is_personal: true
+                    is_personal: true,
+                    cache_time: 30,
                 })
             }
         })

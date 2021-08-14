@@ -60,11 +60,6 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
   integrity sha512-Sr7BhXEAer9xyGuCN3Ek9eg9xPviCF2gfu9kTfuU2HkTVAMYSDeX40fvpmo72n5nansg3nsBjuQBrsS28r+NUw==
 
-"@types/node@^12.0.4":
-  version "12.6.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.8.tgz#e469b4bf9d1c9832aee4907ba8a051494357c12c"
-  integrity sha512-aX+gFgA5GHcDi89KG5keey2zf0WfZk/HAQotEamsK2kbey+8yGKcson0hbK8E+v0NArlCJQCqMP161YhV6ZXLg==
-
 "@types/webidl-conversions@*":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@types/webidl-conversions/-/webidl-conversions-6.1.1.tgz#e33bc8ea812a01f63f90481c666334844b12a09e"
@@ -198,6 +193,11 @@ minimist@^1.2.0:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
   integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
 
+module-alias@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/module-alias/-/module-alias-2.2.2.tgz#151cdcecc24e25739ff0aa6e51e1c5716974c0e0"
+  integrity sha512-A/78XjoX2EmNvppVWEhM2oGk3x4lLxnkEA4jTbaK97QKSDjkIoOsKQlfylt/d3kKKi596Qy3NP5XrXJ6fZIC9Q==
+
 moment@2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
@@ -256,21 +256,17 @@ sparse-bitfield@^3.0.3:
   dependencies:
     memory-pager "^1.0.2"
 
-telegraf@^3.27.1:
-  version "3.30.1"
-  resolved "https://registry.yarnpkg.com/telegraf/-/telegraf-3.30.1.tgz#981e5cfe0a8dba1e0bfd0fffeff97929f33cbe01"
-  integrity sha512-XN/3l6ebTvsL6jMzKqkP4Nq26qw76lEd3jlM8vL40yPoA4nlCAoweTVsislS9e0i7bcqTLgr8tj+3zX6vRZAZw==
+telegraf@^3.39.0:
+  version "3.39.0"
+  resolved "https://registry.yarnpkg.com/telegraf/-/telegraf-3.39.0.tgz#32a7ed464c80802fe3177619d2a9c53413487850"
+  integrity sha512-6u5UyW2KpMS/hwC4DKLGlicK/rVSYCahPFgF14ioP6BzwcDwQlciHCB/oWguvxLJaYGrvY6crzLHfjupFTBPXw==
   dependencies:
-    "@types/node" "^12.0.4"
     debug "^4.0.1"
+    minimist "^1.2.0"
+    module-alias "^2.2.2"
     node-fetch "^2.2.0"
     sandwich-stream "^2.0.1"
-    telegram-typings "^3.6.0"
-
-telegram-typings@^3.6.0:
-  version "3.6.1"
-  resolved "https://registry.yarnpkg.com/telegram-typings/-/telegram-typings-3.6.1.tgz#1288d547f8694b61f1c01c2993e295f3114d9e25"
-  integrity sha512-njVv1EAhIZnmQVLocZEADYUyqA1WIXuVcDYlsp+mXua/XB0pxx+PKtMSPeZ/EE4wPWTw9h/hA9ASTT6yQelkiw==
+    typegram "^3.1.5"
 
 telegram-typings@^5.0.0:
   version "5.0.0"
@@ -301,6 +297,11 @@ ts-node@^10.2.0:
     diff "^4.0.1"
     make-error "^1.1.1"
     yn "3.1.1"
+
+typegram@^3.1.5:
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/typegram/-/typegram-3.4.3.tgz#a1e212beaf6b43079a3774457b40d6eab1a93acf"
+  integrity sha512-pH0TQJzCWM2+7y6yiBoQVNt7PO9ZvAu/lQukVx4sm68FIBBZEBWI+2MzuMcdbwrD5mD5NrEMAyml9N6DupUZag==
 
 typescript@^4.3.5:
   version "4.3.5"

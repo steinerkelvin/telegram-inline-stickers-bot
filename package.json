@@ -23,6 +23,6 @@
     "convict": "^5.2.1",
     "dotenv": "^10.0.0",
     "mongodb": "^4.1.0",
-    "telegraf": "^3.27.1"
+    "telegraf": "^3.39.0"
   }
 }
