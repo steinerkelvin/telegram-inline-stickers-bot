@@ -6,7 +6,7 @@ const LocalSession = require('telegraf-session-local')
 import config from './config'
 import { MyCtx } from "./common"
 import scenes from './scenes'
-import { dbGetStickers } from './db'
+import * as store from './store'
 
 const inlineModeGetSessionKey =
     async (ctx: MyCtx) => {
@@ -38,10 +38,13 @@ class Bot {
             if (next) next()
         })
 
-        // this.bot.use(telegraf.session({ getSessionKey: inlineModeGetSessionKey }))
+        // this.bot.use(telegraf.session({
+        //     getSessionKey: inlineModeGetSessionKey,
+        // }))
 
         let local_session = new LocalSession({
-            storage: LocalSession.storageMemory,
+            // storage: LocalSession.storageMemory,
+            getSessionKey: inlineModeGetSessionKey,
         })
         this.bot.use(local_session.middleware())
 
@@ -54,19 +57,23 @@ class Bot {
     addHandlers() {
         const bot = this.bot
 
-        bot.start((ctx) => ctx.reply("Welcome. Add a sticker with /addsticker"))
+        bot.start((ctx) => ctx.reply("Welcome. Send a sticker to add it to your library."))
 
-        bot.command('/addsticker', (ctx) => ctx.scene.enter('addSticker'))
+        bot.on('sticker', (ctx) => {
+            ctx.scene.session.sticker = ctx.message.sticker
+            ctx.scene.enter("ask_sticker_tags")
+        })
 
         bot.on('message', (ctx) => {
-            ctx.reply("Add a sticker with /addsticker")
+            ctx.reply("Send a sticker to add it to your library.")
         })
 
         bot.on('inline_query', async (ctx) => {
             console.log(`Received inline query.`)
             if (!ctx.from) return
 
-            const stickersIds = await dbGetStickers(this.db, ctx.from)
+            let user = ctx.from
+            const stickersIds = await store.get_stickers(this.db)(user)
             if (stickersIds) {
                 const queryResults = stickersIds.map((id: string) => stickerResult(id, id))
                 queryResults.slice(0, 50)

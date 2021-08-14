@@ -1,53 +1,53 @@
 import { Scenes } from 'telegraf'
-import { dbAddSticker } from './db'
-
-type ScCtx = Scenes.SceneContext
 const Scene = Scenes.BaseScene
 
+import { MyCtx } from './common'
+import * as store from './store'
+
 const sc = {
-    entry: new Scene<ScCtx>('addSticker'),
-    askingSticker: new Scene<ScCtx>('addSticker_askingStiker'),
-    askingAlias: new Scene<ScCtx>('addSticker_askingAlias'),
+    ask_sticker_tags: new Scene<MyCtx>('ask_sticker_tags'),
 }
 
-sc.entry.enter((ctx) => ctx.scene.enter('addSticker_askingStiker'))
 
+// scene: ask_sticker_tags
+// Asks for multiple tags to associate with the sticker.
+// Stops when receive /done command.
 
-// askingSticker
-
-sc.askingSticker.enter((ctx) => {
-    ctx.reply("Send sticker")
+sc.ask_sticker_tags.enter((ctx) => {
+    ctx.reply("Send a tag (any text):")
 })
 
-sc.askingSticker.on('sticker', (ctx) => {
-    const sticker = ctx.message.sticker
-    ctx.scene.enter('addSticker_askingAlias', {sticker})
+sc.ask_sticker_tags.leave((ctx) => {
+    const tags = ctx.scene.session.tags ?? []
+    let msg = `Added the following tags to the sticker:\n` +
+        tags.map(t => '- `' + t + '`').join('\n')
+    ctx.reply(msg)
 })
 
-sc.askingSticker.on('message', (ctx: any) => {
-    ctx.reply('Not a sticker. Send a sticker plz')
-})
-
-
-// askingAlias
-
-sc.askingAlias.enter((ctx: any) => {
-    ctx.reply("Send sticker alias (any text)")
-})
-
-sc.askingAlias.on('text', (ctx: any) => {
-    const alias = ctx.message.text.trim()
-    ctx.reply(`Adding sticker with alias '${alias}'`)
-
-    const sticker = ctx.scene.state.sticker
-    sticker.alias = alias
-
-    ctx.session.stickers = ctx.session.stickers || {}
-    ctx.session.stickers[alias] = sticker
-
-    dbAddSticker(ctx.db, ctx.from, sticker.file_id)
-
+sc.ask_sticker_tags.command('/done', (ctx) => {
     ctx.scene.leave()
+})
+
+sc.ask_sticker_tags.on('text', async (ctx) => {
+    const sc_session = ctx.scene.session
+
+    const tag = ctx.message.text.trim()
+
+    const sticker = sc_session.sticker
+    if (sticker == null) {
+        let msg = "missing `sticker` on scene session data"
+        console.error(`ERROR: ${msg}`)
+        ctx.reply(`INTERNAL ERROR: ${msg}`)
+        ctx.scene.leave()
+        return
+    }
+
+    sc_session.tags ??= []
+    sc_session.tags.push(tag)
+
+    store.add_sticker_tag(ctx.db)(ctx.from, sticker.file_id)
+
+    await ctx.reply(`Send more tags or finish with /done.`)
 })
 
 
