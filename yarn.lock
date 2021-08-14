@@ -272,10 +272,10 @@ telegram-typings@^3.6.0:
   resolved "https://registry.yarnpkg.com/telegram-typings/-/telegram-typings-3.6.1.tgz#1288d547f8694b61f1c01c2993e295f3114d9e25"
   integrity sha512-njVv1EAhIZnmQVLocZEADYUyqA1WIXuVcDYlsp+mXua/XB0pxx+PKtMSPeZ/EE4wPWTw9h/hA9ASTT6yQelkiw==
 
-telegram-typings@^4.0.0-beta:
-  version "4.0.0-beta"
-  resolved "https://registry.yarnpkg.com/telegram-typings/-/telegram-typings-4.0.0-beta.tgz#802e2f6f58af1c33bbc12c3fe8702e9e07d4d9bc"
-  integrity sha512-p5rH6xmotS4wvzQr3z0EyyMNGOceaZ1poUienbRFPUHTHQv4W+n40vORRwuc1myZ41E633l2UGdXl2V9hjX7Dw==
+telegram-typings@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/telegram-typings/-/telegram-typings-5.0.0.tgz#a5ab8aeb4115b60a6ff02ad66b02b33181fc07cf"
+  integrity sha512-3xmQ9D87wEdMYUgzTekEP4hEPJz9lIW0tnumrbkH1Tfwt5e7ZMy5ZiUpGnjnQOpZTItrdeEeavRGLRvXepO35w==
 
 tr46@^2.1.0:
   version "2.1.0"
