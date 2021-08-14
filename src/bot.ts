@@ -1,16 +1,15 @@
-import { MongoClient, Db } from "mongodb"
+import { MongoClient, Db } from 'mongodb'
 
-import Telegraf from 'telegraf'
-import tgSession from 'telegraf/session'
-import Stage from 'telegraf/stage'
+import * as telegraf from 'telegraf'
+const LocalSession = require('telegraf-session-local')
 
 import config from './config'
+import { MyCtx } from "./common"
+import scenes from './scenes'
 import { dbGetStickers } from './db'
-import addStickerScenes from './scenes/addSticker'
-import { Ctx } from './common'
 
 const inlineModeGetSessionKey =
-    (ctx: Ctx) => {
+    async (ctx: MyCtx) => {
         if (ctx.from && ctx.chat) {
             return `${ctx.from.id}:${ctx.chat.id}`
         } else if (ctx.from && ctx.inlineQuery) {
@@ -25,15 +24,13 @@ const stickerResult = (id: string, fileId: string) => ({
     sticker_file_id: fileId,
 })
 
-const scenes = [...addStickerScenes]
-
 class Bot {
     db: Db
-    bot: Telegraf<Ctx>
+    bot: telegraf.Telegraf<MyCtx>
     stage: any
 
     constructor(tgToken: string, db: Db) {
-        this.bot = new Telegraf(tgToken)
+        this.bot = new telegraf.Telegraf(tgToken)
         this.db = db
 
         this.bot.use((ctx, next) => {
@@ -41,9 +38,14 @@ class Bot {
             if (next) next()
         })
 
-        this.bot.use(tgSession({ getSessionKey: inlineModeGetSessionKey }))
+        // this.bot.use(telegraf.session({ getSessionKey: inlineModeGetSessionKey }))
 
-        this.stage = new Stage(scenes)
+        let local_session = new LocalSession({
+            storage: LocalSession.storageMemory,
+        })
+        this.bot.use(local_session.middleware())
+
+        this.stage = new telegraf.Scenes.Stage(scenes)
         this.bot.use(this.stage.middleware())
 
         this.addHandlers()
@@ -52,13 +54,9 @@ class Bot {
     addHandlers() {
         const bot = this.bot
 
-        bot.start((ctx) => ctx.reply('Welcome. Add a sticker with /addsticker'))
+        bot.start((ctx) => ctx.reply("Welcome. Add a sticker with /addsticker"))
 
         bot.command('/addsticker', (ctx) => ctx.scene.enter('addSticker'))
-
-        // TODO
-        // bot.command('/list', (ctx) => {
-        // })
 
         bot.on('message', (ctx) => {
             ctx.reply("Add a sticker with /addsticker")

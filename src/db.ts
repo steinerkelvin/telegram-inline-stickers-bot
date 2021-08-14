@@ -2,7 +2,6 @@
 
 type Db = import('mongodb').Db
 type User = import('telegram-typings').User
-// type Sticker = import('telegram-typings').Sticker
 
 // TODO store alias
 

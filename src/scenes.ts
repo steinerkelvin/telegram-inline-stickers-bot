@@ -1,27 +1,25 @@
-// TODO add /cancel command
+import { Scenes } from 'telegraf'
+import { dbAddSticker } from './db'
 
-import Scene from 'telegraf/scenes/base'
-import { dbAddSticker } from '../db'
-import { Ctx } from '../common'
-
-const redirectScene = (sceneName: string) => (ctx: Ctx) => ctx.scene.enter(sceneName)
+type ScCtx = Scenes.SceneContext
+const Scene = Scenes.BaseScene
 
 const sc = {
-    entry: new Scene('addSticker'),
-    askingSticker: new Scene('addSticker_askingStiker'),
-    askingAlias: new Scene('addSticker_askingAlias'),
+    entry: new Scene<ScCtx>('addSticker'),
+    askingSticker: new Scene<ScCtx>('addSticker_askingStiker'),
+    askingAlias: new Scene<ScCtx>('addSticker_askingAlias'),
 }
 
-sc.entry.enter(redirectScene('addSticker_askingStiker'))
+sc.entry.enter((ctx) => ctx.scene.enter('addSticker_askingStiker'))
 
 
 // askingSticker
 
-sc.askingSticker.enter((ctx: any) => {
+sc.askingSticker.enter((ctx) => {
     ctx.reply("Send sticker")
 })
 
-sc.askingSticker.on('sticker', (ctx: any) => {
+sc.askingSticker.on('sticker', (ctx) => {
     const sticker = ctx.message.sticker
     ctx.scene.enter('addSticker_askingAlias', {sticker})
 })
