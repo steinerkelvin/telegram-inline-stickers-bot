@@ -14,9 +14,10 @@
     "@types/convict": "^6.1.1",
     "@types/dotenv": "^8.2.0",
     "@types/mongodb": "^4.0.7",
+    "@types/node": "^16.6.1",
     "telegram-typings": "^4.0.0-beta",
     "ts-node": "^10.2.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "convict": "^5.2.1",
