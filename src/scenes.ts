@@ -47,6 +47,8 @@ sc.ask_sticker_tags.on('text', async (ctx) => {
     sc_session.tags.push(tag)
 
     store.add_sticker_tag(ctx.db)(user.id, tag, sticker.file_id)
+    // TODO only add on finish
+    // TODO /cancel command
 
     await ctx.reply(`Send more tags or finish with /done.`)
 })

@@ -9,7 +9,7 @@ RUN yarn install
 RUN yarn build
 
 
-FROM node:16 AS app
+FROM node:16-alpine AS app
 
 COPY --from=build /app/build /app/build
 COPY ./package.json ./yarn.lock /app/
