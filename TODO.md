@@ -1,0 +1,11 @@
+- [ ] tag management
+  - [ ] list tags when sticker is sent
+    - [ ] add remove commands
+  - [ ] list all tags
+  - [ ] remove tags
+  - [ ] rename tags
+  - buttons??
+- [ ] fix repeated stickers on results
+- [ ] exact query match
+- [ ] record sticker usage
+  - [ ] which algorithm?
