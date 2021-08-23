@@ -1,4 +1,4 @@
-FROM node:16 AS build
+FROM node:16-alpine AS build
 
 COPY ./src /app/src 
 COPY ./package.json ./yarn.lock ./tsconfig.json /app/

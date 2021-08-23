@@ -1,3 +1,4 @@
+- [ ] return all stickers on empty query
 - [ ] tag management
   - [ ] list tags when sticker is sent
     - [ ] add remove commands
