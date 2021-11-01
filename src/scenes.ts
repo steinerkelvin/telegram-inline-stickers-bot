@@ -14,7 +14,7 @@ const sc = {
 // Stops when receive /done command.
 
 sc.ask_sticker_tags.enter((ctx) => {
-    ctx.reply("Send a tag (any text):")
+    ctx.reply("Send tags (any text, one tag per message):")
 })
 
 sc.ask_sticker_tags.leave((ctx) => {
