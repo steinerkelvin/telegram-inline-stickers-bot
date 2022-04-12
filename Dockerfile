@@ -9,12 +9,12 @@ RUN yarn install
 RUN yarn build
 
 
-FROM node:16-alpine AS app
+# FROM node:16-alpine AS app
 
-COPY --from=build /app/build /app/build
-COPY ./package.json ./yarn.lock /app/
+# COPY --from=build /app/build /app/build
+# COPY ./package.json ./yarn.lock /app/
 
-WORKDIR /app
-RUN yarn install --prod
+# WORKDIR /app
+# RUN yarn install --prod
 
 CMD ["node", "./build/bot.js"]
