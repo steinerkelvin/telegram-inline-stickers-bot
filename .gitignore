@@ -2,6 +2,10 @@
 *~
 .env
 
+# direnv
+.envrc
+.direnv
+
 node_modules
 *.tsbuildinfo
 /build/
