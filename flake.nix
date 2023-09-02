@@ -12,8 +12,9 @@
       in
       {
         devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            dbmate
+          buildInputs = [
+            pkgs.dbmate
+            pkgs.postgresql
             # (pkgs.callPackage ./default.nix { })
           ];
         };
