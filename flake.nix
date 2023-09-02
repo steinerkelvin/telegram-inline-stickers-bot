@@ -14,7 +14,8 @@
         devShell = pkgs.mkShell {
           buildInputs = [
             pkgs.dbmate
-            pkgs.postgresql
+            pkgs.postgresql_15
+            pkgs.sqlfluff
             # (pkgs.callPackage ./default.nix { })
           ];
         };
