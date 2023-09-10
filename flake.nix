@@ -16,6 +16,7 @@
             pkgs.dbmate
             pkgs.postgresql_15
             pkgs.sqlfluff
+            pkgs.docker-compose
             # (pkgs.callPackage ./default.nix { })
           ];
         };
